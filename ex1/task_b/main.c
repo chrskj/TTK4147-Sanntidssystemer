@@ -1,18 +1,24 @@
 #include "util.h"
 
+#include <stdint.h>
 #include <stdio.h>
+#include <x86intrin.h>
+#include <inttypes.h>
 
 int main(int argc, char *argv[]){
     if(argc == 2){
         switch (*argv[1]){
             case 'a':
-                printf("This is a");
+                latency_rdtsc(10*1000*1000);
+                resolution_rdtsc();
                 break;
             case 'b':
-                printf("This is b");
+                latency_clock(10*1000*1000);
+                resolution_clock();
                 break;
             case 'c':
-                printf("This is c\n");
+                latency_times(10*1000*1000);
+                resolution_times();
                 break;
         }
     }
