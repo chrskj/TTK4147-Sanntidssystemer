@@ -1,5 +1,5 @@
 # program executable name
-TARGET = sort_args
+TARGET = busy_wait
 # compiler flags
 CFLAGS = -g -Wall
 # linker flags
