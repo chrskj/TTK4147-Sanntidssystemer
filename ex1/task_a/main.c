@@ -6,12 +6,9 @@
 
 struct timespec duration = {1, 0};
 
-int main(int argc, char *argv[])
-{
-    if(argc == 2)
-    {
-        switch (*argv[1])
-        {
+int main(int argc, char *argv[]){
+    if(argc == 2){
+        switch (*argv[1]){
             case 'a':
                 printf("This is a");
                 sleep(1);
@@ -21,17 +18,16 @@ int main(int argc, char *argv[])
                 busy_wait(duration);
                 break;
             case 'c':
-                printf("This is c");
+                printf("This is c\n");
                 busy_wait_times(1);
+                printf("c is finished\n");
                 break;
         }
     }
-    else if(argc > 2)
-    {
+    else if(argc > 2){
         printf("Too many arguments supplied.\n");
     }
-    else
-    {
+    else{
         printf("One argument expected.\n");
     }
 }
