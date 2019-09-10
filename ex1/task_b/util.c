@@ -63,9 +63,9 @@ void resolution_rdtsc(){
     for(int i = 0; i < 10*1000*1000; i++){
         t1 = __rdtsc();
         t2 = __rdtsc();
-        
-        int ns = (t2 - t1) * 1;
-        
+
+        int ns = (t2 - t1) / 2.66;
+
         if(ns >= 0 && ns < ns_max){
             histogram[ns]++;
         }
@@ -102,10 +102,10 @@ void resolution_clock(){
     for(int i = 0; i < 10*1000*1000; i++){
         clock_gettime(CLOCK_MONOTONIC, &t1);
         clock_gettime(CLOCK_MONOTONIC, &t2);
-        
+
         struct timespec tick_normalized = timespec_sub(t2, t1);
         uint64_t tick_ns = tick_normalized.tv_sec*pow(10, 9) + tick_normalized.tv_nsec;
-        
+
         if(tick_ns >= 0 && tick_ns < (uint64_t)ns_max){
             histogram[tick_ns]++;
         }
@@ -117,17 +117,19 @@ void resolution_clock(){
 }
 
 void latency_times(int n){
-    uint64_t start_tick = __rdtsc();
-    uint64_t ticks;
+    struct tms st_cpu;
+    struct tms cpu;
+    clock_t start_tick = times(&st_cpu);
+    clock_t ticks;
+
     for(int i = 0; i < n; i++)
     {
-        ticks = __rdtsc();
+        ticks = times(&cpu);
     }
-    n = (uint64_t)n;
     ticks = ticks - start_tick;
-    uint64_t latency = ticks / n;
-    printf("ticks: %" PRIu64 "\n", ticks);
-    printf("latency: %" PRIu64 "\n", latency);
+    int latency = ticks / n;
+    printf("ticks: %d \n", ticks);
+    printf("latency: %d \n", latency);
 }
 
 void resolution_times(){
@@ -139,9 +141,9 @@ void resolution_times(){
     for(int i = 0; i < 10*1000*1000; i++){
         t1 = __rdtsc();
         t2 = __rdtsc();
-        
+
         int ns = (t2 - t1) * 1;
-        
+
         if(ns >= 0 && ns < ns_max){
             histogram[ns]++;
         }
