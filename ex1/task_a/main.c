@@ -1,10 +1,12 @@
 #include <time.h>
+#include <sys/times.h>
 #include <stdio.h>
 #include <unistd.h>
 
 #include "util.h"
 
-struct timespec duration = {1, 0};
+struct timespec duration_b = {1, 0};
+struct tms duration_c = {0, 100, 0, 0};
 
 int main(int argc, char *argv[]){
     if(argc == 2){
@@ -15,12 +17,11 @@ int main(int argc, char *argv[]){
                 break;
             case 'b':
                 printf("This is b");
-                busy_wait(duration);
+                busy_wait(duration_b);
                 break;
             case 'c':
                 printf("This is c\n");
-                busy_wait_times(1);
-                printf("c is finished\n");
+                busy_wait_times(duration_c);
                 break;
         }
     }

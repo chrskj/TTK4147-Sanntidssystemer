@@ -139,8 +139,9 @@ void latency_times(int n){
     struct tms ticks;
     for(int i = 0; i < n; i++) {
         times(&ticks);
+        //printf("ticks: %li \n", ticks.tms_stime);
     }
-    int latency = ticks.tms_stime / n;
+    int latency = (ticks.tms_stime / n)*(1000000000/100);
     printf("ticks: %li \n", ticks.tms_stime);
     printf("latency: %d \n", latency);
 }
@@ -156,7 +157,7 @@ void resolution_times(){
         times(&t2);
         //printf("%li, %li \n", t1.tms_stime, t2.tms_stime);
 
-        int ns = (t2.tms_stime - t1.tms_stime) * 1;
+        int ns = (t2.tms_stime - t1.tms_stime)*(1000000000/100);
 
         if(ns >= 0 && ns < ns_max){
             histogram[ns]++;

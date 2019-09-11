@@ -6,5 +6,4 @@
 #include <limits.h>
 
 void busy_wait(struct timespec t);
-void busy_wait_times(clock_t interval);
-
+void busy_wait_times(struct tms t);
