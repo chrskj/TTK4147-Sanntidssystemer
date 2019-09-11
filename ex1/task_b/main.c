@@ -10,14 +10,20 @@ int main(int argc, char *argv[]){
         switch (*argv[1]){
             case 'a':
                 latency_rdtsc(10*1000*1000);
-                resolution_rdtsc();
                 break;
             case 'b':
-                latency_clock(10*1000*1000);
-                resolution_clock();
+                resolution_rdtsc();
                 break;
             case 'c':
+                latency_clock(10*1000*1000);
+                break;
+            case 'd':
+                resolution_clock();
+                break;
+            case 'e':
                 latency_times(10*1000*1000);
+                break;
+            case 'f':
                 resolution_times();
                 break;
         }

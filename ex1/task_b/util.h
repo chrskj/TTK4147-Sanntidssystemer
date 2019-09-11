@@ -1,5 +1,6 @@
 #pragma once
 #include <time.h>
+#include <sys/times.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <x86intrin.h>
