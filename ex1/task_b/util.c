@@ -30,18 +30,18 @@ int timespec_cmp(struct timespec lhs, struct timespec rhs){
     return lhs.tv_nsec - rhs.tv_nsec;
 }
 
-struct tms tms_add(struct tms lhs, struct tms rhs){
-    return (struct tms){lhs.tms_utime + rhs.tms_utime,
-        lhs.tms_stime + rhs.tms_stime,
-        lhs.tms_cutime + rhs.tms_cutime,
-        lhs.tms_cstime + rhs.tms_cstime};
-}
-
  struct tms tms_sub(struct tms lhs, struct tms rhs){
      return (struct tms){lhs.tms_utime - rhs.tms_utime,
         lhs.tms_stime - rhs.tms_stime,
         lhs.tms_cutime - rhs.tms_cutime,
         lhs.tms_cstime - rhs.tms_cstime};
+}
+
+struct tms tms_add(struct tms lhs, struct tms rhs){
+    return (struct tms){lhs.tms_utime + rhs.tms_utime,
+        lhs.tms_stime + rhs.tms_stime,
+        lhs.tms_cutime + rhs.tms_cutime,
+        lhs.tms_cstime + rhs.tms_cstime};
 }
 
 int tms_cmp(struct tms lhs, struct tms rhs){
@@ -61,6 +61,34 @@ void busy_wait(struct timespec t){
         clock_gettime(CLOCK_MONOTONIC, &now);
     }
 }
+
+void busy_wait_times(struct tms t){
+    struct tms now;
+    times(&now);
+    struct tms then = tms_add(now, t);
+
+    while(tms_cmp(now, then) < 0){
+        //printf("%li, %li \n", now.tms_stime, then.tms_stime);
+        for(int i = 0; i < 10000; i++){}
+        times(&now);
+    }
+}
+
+/*
+void busy_wait_times(clock_t interval){
+    struct tms st_cpu;
+    struct tms en_cpu;
+
+    clock_t st_time = times(&st_cpu);
+    clock_t en_time = st_time + interval;
+
+    while(en_time - times(&en_cpu) > 0){
+        printf("%jd", (long)(en_time - times(&en_cpu)));
+        for(int i = 0; i < 10000; i--){}
+        st_time = times(&st_cpu);
+    }
+}
+*/
 
 void latency_rdtsc(int n){
     uint64_t start_tick = __rdtsc();
@@ -121,6 +149,7 @@ void resolution_clock(){
     struct timespec t2;
     for(int i = 0; i < 10*1000*1000; i++) {
         clock_gettime(CLOCK_MONOTONIC, &t1);
+        //sched_yield();
         clock_gettime(CLOCK_MONOTONIC, &t2);
 
         struct timespec tick_normalized = timespec_sub(t2, t1);

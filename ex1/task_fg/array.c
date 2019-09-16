@@ -80,15 +80,28 @@ long array_length(Array a){
     return a.back - a.front;
 }
 
-void array_reserve(Array* a, long capacity){
-
+void array_reserve(Array* a_ptr, long capacity){
+    Array bigger_a = array_new(capacity);
+    for(Array b = array_save(*a_ptr); !array_empty(b); array_popFront(&b)){
+        bigger_a.data[bigger_a.back] = array_front(b);
+        bigger_a.back++;
+    }
+    array_destroy(*a_ptr);
+    *a_ptr = bigger_a;
+    //printf("inside function:\n %li, %li, %li \n",
+    //        a_ptr->front, a_ptr->back, a_ptr->capacity);
+    //array_print(*a_ptr);
 }
 
 
 // Modifiers
 
-void array_insertBack(Array* a, long stuff){
-
+void array_insertBack(Array* a_ptr, long stuff){
+    if(a_ptr->back >= a_ptr->capacity-1){
+        array_reserve(a_ptr, a_ptr->capacity*2);
+    }
+    a_ptr->back++;
+    a_ptr->data[a_ptr->back - 1] = stuff;
 }
 
 
