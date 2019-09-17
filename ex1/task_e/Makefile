@@ -1,9 +1,9 @@
 # program executable name
 TARGET = fill_memory
 # compiler flags
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -fsanitize=address
 # linker flags
-LDFLAGS = -g
+LDFLAGS = -g -fsanitize=address
 # list of sources
 SOURCES = $(shell find -name "*.c")
 # default rule, to compile everything

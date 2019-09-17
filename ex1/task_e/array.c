@@ -80,10 +80,11 @@ long array_length(Array a){
     return a.back - a.front;
 }
 
+/*
 void array_reserve(Array* a, long capacity){
 
 }
-
+*/
 
 // Modifiers
 
@@ -91,5 +92,3 @@ void array_insertBack(Array* a, long stuff){
     a->back++;
     a->data[a->back - 1] = stuff;
 }
-
-

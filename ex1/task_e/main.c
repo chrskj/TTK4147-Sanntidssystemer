@@ -5,15 +5,26 @@
 #include "array.h"
 
 int main(){
-    long capacity = 16;
+    long capacity = 2;
     Array a = array_new(capacity);
-    long data[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-
-    for(int i = 0; i<capacity; i++){
-        //printf("inserting %li \n", data[i]);
-        array_insertBack(&a, data[i]);
-    }
-
+    array_insertBack(&a, 1);
     array_print(a);
+    array_insertBack(&a, 2);
+    array_print(a);
+    array_insertBack(&a, 3);
+    array_print(a);
+    array_insertBack(&a, 4);
+    array_print(a);
+    array_insertBack(&a, 5);
+    array_print(a);
+    array_insertBack(&a, 5);
+    array_print(a);
+    array_insertBack(&a, 7);
+    array_print(a);
+    array_insertBack(&a, 8);
+    array_print(a);
+    array_insertBack(&a, 9);
+    array_print(a);
+    array_destroy(a);
     return 0;
 }

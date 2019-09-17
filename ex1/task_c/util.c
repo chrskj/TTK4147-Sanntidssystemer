@@ -142,14 +142,14 @@ void latency_clock(int n){
 }
 
 void resolution_clock(){
-    int ns_max = 50;
+    int ns_max = 500;
     int histogram[ns_max];
     memset(histogram, 0, sizeof(int)*ns_max);
     struct timespec t1;
     struct timespec t2;
     for(int i = 0; i < 10*1000*1000; i++) {
         clock_gettime(CLOCK_MONOTONIC, &t1);
-        //sched_yield();
+        sched_yield();
         clock_gettime(CLOCK_MONOTONIC, &t2);
 
         struct timespec tick_normalized = timespec_sub(t2, t1);

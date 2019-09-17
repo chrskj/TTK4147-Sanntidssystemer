@@ -12,7 +12,9 @@ int main(){
     int len_data = sizeof(data)/sizeof(long);
     for(int i = 0; i<len_data; i++){
         printf("inserting %li %li %li %li \n", data[i], a.front, a.back, a.capacity);
-        printf("inserting %p \n", &a);
+        printf("inserting %p \n", &data[i]);
+        //printf("inserting %p \n", &a.back);
+        //printf("inserting %p \n", &a.front);
         array_insertBack(&a, data[i]);
     }
     array_print(a);
