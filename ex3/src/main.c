@@ -38,7 +38,7 @@ void init(){
 }
 
 // TASK_C (and D 1) with expensive B)
-__attribute__((__interrupt__)) static void interrupt_J3(void){ 
+/*__attribute__((__interrupt__)) static void interrupt_J3(void){ 
 	if (gpio_get_pin_interrupt_flag(TEST_A)){
 		gpio_clr_gpio_pin(RESPONSE_A);
 		busy_delay_us(5);
@@ -48,9 +48,9 @@ __attribute__((__interrupt__)) static void interrupt_J3(void){
 	if (gpio_get_pin_interrupt_flag(TEST_B)){
 		gpio_clr_gpio_pin(RESPONSE_B);
 		//fast B event
-		busy_delay_us(5);
+		//busy_delay_us(5);
 		// expensive B event
-		//busy_delay_us(100);
+		busy_delay_us(100);
 		gpio_set_gpio_pin(RESPONSE_B);
 		gpio_clear_pin_interrupt_flag(TEST_B);
 	}
@@ -60,77 +60,92 @@ __attribute__((__interrupt__)) static void interrupt_J3(void){
 		gpio_set_gpio_pin(RESPONSE_C);
 		gpio_clear_pin_interrupt_flag(TEST_C);
 	}
-}
+}*/
 
+// The variance is much lower but the response time is a bit slower. This can be explained by the use of interrupts. Tests are done one sequentially. 
+// Tests A and B look the same whereas C is different (2 pikes)
 
 // TASK_D 2) deferred interrupt handling
-/*__attribute__((__interrupt__)) static void interrupt_J3(void){
+__attribute__((__interrupt__)) static void interrupt_J3(void){
 	if (gpio_get_pin_interrupt_flag(TEST_A)){
 		flagA = 1;
+		gpio_clear_pin_interrupt_flag(TEST_A);
 	}
 	if (gpio_get_pin_interrupt_flag(TEST_B)){
 		flagB = 1;
+		gpio_clear_pin_interrupt_flag(TEST_B);
 	}
 	if (gpio_get_pin_interrupt_flag(TEST_C)){
 		flagC = 1;
+		gpio_clear_pin_interrupt_flag(TEST_C);
 	}
-}*/
+}
 
 
 int main (void){
     init();
-    // TASK_A and B : no interrupt
+    //Initialisation : responses actives
+	gpio_configure_pin(TEST_A, GPIO_DIR_INPUT);
+	gpio_configure_pin(TEST_B, GPIO_DIR_INPUT);
+	gpio_configure_pin(TEST_C, GPIO_DIR_INPUT);
+	
+	gpio_configure_pin(RESPONSE_A, GPIO_DIR_OUTPUT|GPIO_INIT_HIGH);
+	gpio_configure_pin(RESPONSE_B, GPIO_DIR_OUTPUT|GPIO_INIT_HIGH);
+	gpio_configure_pin(RESPONSE_C, GPIO_DIR_OUTPUT|GPIO_INIT_HIGH);
+	
 	/*gpio_set_gpio_pin(RESPONSE_A);
 	gpio_set_gpio_pin(RESPONSE_B);
 	gpio_set_gpio_pin(RESPONSE_C);*/
 	
 	// TASK_C (or D): everything is done into the interrupt J3  (just flags are set in the interrupt)
-	/*gpio_enable_pin_interrupt(TEST_A, GPIO_RISING_EDGE);
-	gpio_enable_pin_interrupt(TEST_B, GPIO_RISING_EDGE);
-	gpio_enable_pin_interrupt(TEST_C, GPIO_RISING_EDGE);*/
+	gpio_enable_pin_interrupt(TEST_A, GPIO_FALLING_EDGE); //falling edge because the butterfly is set like this
+	gpio_enable_pin_interrupt(TEST_B, GPIO_FALLING_EDGE);
+	gpio_enable_pin_interrupt(TEST_C, GPIO_FALLING_EDGE);
 	
 
 	
     while(1){
-        gpio_toggle_pin(LED0_GPIO);
-		printf("tick\n");
-		
-		
-        busy_delay_ms(500);
+        //gpio_toggle_pin(LED0_GPIO);
+		//printf("tick\n");
+		//busy_delay_ms(500);
 		
 		//TASK_A and B
-		if(gpio_get_pin_value(TEST_A)==0){
+		/*if(gpio_get_pin_value(TEST_A)==0){
 			gpio_clr_gpio_pin(RESPONSE_A);
-			printf("A should be 0 %u\n", gpio_get_pin_value(RESPONSE_A));
+			//printf("A should be 0 %u\n", gpio_get_pin_value(RESPONSE_A));
 			busy_delay_us(5);
 			gpio_set_gpio_pin(RESPONSE_A);
-			printf("A should be 1 : %u\n", gpio_get_pin_value(RESPONSE_A));
+			//printf("A should be 1 : %u\n", gpio_get_pin_value(RESPONSE_A));
 		}
 		
 		if(gpio_get_pin_value(TEST_B)==0){
 			gpio_clr_gpio_pin(RESPONSE_B);
-			printf("B should be 0 %u\n", gpio_get_pin_value(RESPONSE_B));
+			//printf("B should be 0 %u\n", gpio_get_pin_value(RESPONSE_B));
 			busy_delay_us(5);
 			gpio_set_gpio_pin(RESPONSE_B);
-			printf("B should be 1 %u\n", gpio_get_pin_value(RESPONSE_B));
+			//printf("B should be 1 %u\n", gpio_get_pin_value(RESPONSE_B));
 		}
 		if(gpio_get_pin_value(TEST_C)==0){
 			gpio_set_pin_low(RESPONSE_C);
-			printf("C should be 0 %u\n", gpio_get_pin_value(RESPONSE_C));
+			//printf("C should be 0 %u\n", gpio_get_pin_value(RESPONSE_C));
 			busy_delay_us(5);
 			gpio_set_gpio_pin(RESPONSE_C);
-			printf("C should be 1 %u\n", gpio_get_pin_value(RESPONSE_C));
-		}
-			
+			//printf("C should be 1 %u\n", gpio_get_pin_value(RESPONSE_C));
+		}*/
 		
 		
-		// TASK_D
+		// The 	Task A has lowest variance and lowest maximum. Task B needs to access three different pins and maybe has to wait inbetween. 
+		// The response for A,B and C looks similar
 		
-		/*if (flagA){
+		
+		
+		// TASK_D2
+		
+		if (flagA){
 			gpio_clr_gpio_pin(RESPONSE_A);
 			busy_delay_us(5);
 			gpio_set_gpio_pin(RESPONSE_A);
-			gpio_clear_pin_interrupt_flag(TEST_A);
+			//gpio_clear_pin_interrupt_flag(TEST_A);
 			flagA = 0;
 		}
 		if (flagB){
@@ -140,16 +155,16 @@ int main (void){
 			//fast event B
 			//busy_delay_us(5);
 			gpio_set_gpio_pin(RESPONSE_B);
-			gpio_clear_pin_interrupt_flag(TEST_B);
+			//gpio_clear_pin_interrupt_flag(TEST_B);
 			flagB = 0;
 		}
 		if (flagC){
 			gpio_clr_gpio_pin(RESPONSE_C);
 			busy_delay_us(5);
 			gpio_set_gpio_pin(RESPONSE_C);
-			gpio_clear_pin_interrupt_flag(TEST_C);
+			//gpio_clear_pin_interrupt_flag(TEST_C);
 			flagC = 0;
-		}*/
+		}
 		
 	
     }
