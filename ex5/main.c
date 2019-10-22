@@ -67,7 +67,7 @@ void* taskD(void* args){
 
     struct timespec waketime;
     clock_gettime(CLOCK_REALTIME, &waketime);
-    struct timespec period = {.tv_sec = 0, .tv_nsec = 1*1000*10};
+    struct timespec period = {.tv_sec = 0, .tv_nsec = 500*1000};
 
     struct responseTaskArgs a = *(struct responseTaskArgs*)args;
 
