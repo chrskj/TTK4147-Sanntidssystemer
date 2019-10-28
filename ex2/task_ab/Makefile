@@ -1,7 +1,7 @@
 # program executable name
-TARGET = task_b
+TARGET = task_b2
 # compiler flags
-CFLAGS = -g -Wall -lpthread
+CFLAGS = -g -Wall -lpthread -fsanitize=thread
 # linker flags
 LDFLAGS = -g -lpthread
 # list of sources

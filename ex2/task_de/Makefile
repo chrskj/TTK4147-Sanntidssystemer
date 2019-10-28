@@ -1,9 +1,9 @@
 # program executable name
-TARGET = task_d
+TARGET = task_d1
 # compiler flags
-CFLAGS = -Wall -std=gnu11 -g -O3 -lpthread -fsanitize=thread
+CFLAGS = -g -lpthread
 # linker flags
-LDFLAGS = -std=gnu11 -g -O3 -lpthread -fsanitize=thread
+LDFLAGS = -g -lpthread
 # list of sources
 SOURCES = $(shell find -name "*.c")
 # default rule, to compile everything
